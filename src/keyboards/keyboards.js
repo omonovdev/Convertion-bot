@@ -1,4 +1,6 @@
 import { Markup } from 'telegraf';
+// mainKeyboard: default (oddiy) menyu, admin emas, uzbek tilida
+export const mainKeyboard = getMainKeyboard(false, 'uz');
 
 /**
  * Asosiy menyuni yaratish (admin uchun qo'shimcha tugma)
