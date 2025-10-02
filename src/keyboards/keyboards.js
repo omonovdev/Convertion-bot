@@ -239,12 +239,6 @@ export function getBroadcastKeyboard() {
 /**
  * Kanal a'zoligi keyboardi
  */
-export function getChannelMembershipKeyboard() {
-    return Markup.inlineKeyboard([
-        [Markup.button.url('📢 Kanalga kirish', 'https://t.me/omonovpg')],
-        [Markup.button.callback('✅ Tekshirish', 'check_membership')]
-    ]);
-}
 
 /**
  * Til tanlash keyboardi
@@ -280,7 +274,6 @@ export default {
     getHelpInlineKeyboard,
     getAdminKeyboard,
     getBroadcastKeyboard,
-    getChannelMembershipKeyboard,
     getRatingKeyboard,
     getLanguageKeyboard
 };

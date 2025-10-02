@@ -189,26 +189,6 @@ export function getBroadcastSuccessMessage(sentCount, failedCount) {
 /**
  * Majburiy kanal a'zoligi xabari
  */
-export function getChannelMembershipMessage() {
-    return `
-🔒 *Kanalga a'zo bo'ling*
-
-📢 ${config.requiredChannel.name}
-
-✅ A'zo bo'lgandan keyin "Tekshirish" tugmasini bosing
-    `;
-}
-
-/**
- * A'zolik muvaffaqiyatli tekshirildi xabari
- */
-export function getMembershipVerifiedMessage() {
-    return `
-✅ *A'zolik tasdiqlandi!*
-
-🎉 Botdan foydalanishingiz mumkin
-    `;
-}
 
 /**
  * Til tanlash xabari
@@ -525,8 +505,6 @@ export default {
     getUserStatsMessage,
     getBroadcastMessage,
     getBroadcastSuccessMessage,
-    getChannelMembershipMessage,
-    getMembershipVerifiedMessage,
     getLanguageSelectionMessage,
     getLanguageChangedMessage,
     messages,

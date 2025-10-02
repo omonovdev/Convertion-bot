@@ -110,23 +110,6 @@ export function updateUserActivity(userId) {
     updateUser(userId, { lastSeen: new Date().toISOString() });
 }
 
-/**
- * Foydalanuvchining kanal a'zoligini belgilash
- */
-export function setChannelMembership(userId, isMember) {
-    updateUser(userId, {
-        isChannelMember: isMember,
-        membershipCheckedAt: new Date().toISOString()
-    });
-}
-
-/**
- * Foydalanuvchining kanal a'zoligini tekshirish
- */
-export function getChannelMembership(userId) {
-    const user = getUser(userId);
-    return user?.isChannelMember || false;
-}
 
 /**
  * Foydalanuvchi reytingini saqlash
@@ -207,8 +190,6 @@ export default {
     getUsersCount,
     getOnlineUsersCount,
     updateUserActivity,
-    setChannelMembership,
-    getChannelMembership,
     saveUserRating,
     getRatingStats,
     setUserLanguage,

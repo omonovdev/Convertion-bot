@@ -18,13 +18,6 @@ export const config = {
     adminUsername: process.env.ADMIN_USERNAME || 'omonovaxrorbek',
     adminId: process.env.ADMIN_ID || '7927717013', // Admin Telegram ID
 
-    // Majburiy kanal
-    requiredChannel: {
-        username: 'omonovpg',
-    id: '-1002174533232', // OmonovPG kanalining to'g'ri ID si
-        name: 'OmonovPG',
-        link: 'https://t.me/omonovpg'
-    },
 
     // Conversion types
     conversionTypes: {

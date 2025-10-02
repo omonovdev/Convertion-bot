@@ -19,7 +19,6 @@ import {
     getPostConversionInlineKeyboard,
     getAdminKeyboard,
     getBroadcastKeyboard,
-    getChannelMembershipKeyboard,
     getRatingKeyboard,
     getLanguageKeyboard
 } from './src/keyboards/keyboards.js';
@@ -37,9 +36,7 @@ import {
     getAdminPanelMessage,
     getUserStatsMessage,
     getBroadcastMessage,
-    getBroadcastSuccessMessage,
-    getChannelMembershipMessage,
-    getMembershipVerifiedMessage
+    getBroadcastSuccessMessage
 } from './src/messages/messages.js';
 import {
     addUser,
@@ -47,8 +44,7 @@ import {
     getUsersCount,
     getOnlineUsersCount,
     getAllUsers,
-    setChannelMembership,
-    getChannelMembership,
+    
     saveUserRating,
     getRatingStats,
     setUserLanguage,
@@ -208,40 +204,6 @@ async function checkChannelMembership(ctx, userId) {
 bot.use(async (ctx, next) => {
     if (ctx.from) {
         updateUserActivity(ctx.from.id);
-
-        // Start komandasi va admin uchun tekshirish yo'q
-        const isStartCommand = ctx.message && ctx.message.text && ctx.message.text.startsWith('/start');
-        const userId = ctx.from.id;
-
-        if (!isStartCommand && !isAdmin(userId)) {
-            // Real-time API orqali kanal a'zoligini tekshirish
-            try {
-                const member = await ctx.telegram.getChatMember(config.requiredChannel.id, userId);
-                const isMember = ['member', 'administrator', 'creator'].includes(member.status);
-
-                if (!isMember) {
-                    // Local bazadan ham olib tashlaymiz
-                    setChannelMembership(userId, false);
-
-                    const membershipMsg = getChannelMembershipMessage();
-                    const keyboard = getChannelMembershipKeyboard();
-
-                    await ctx.replyWithMarkdown(membershipMsg, keyboard);
-                    return;
-                } else {
-                    // A'zo bo'lsa local bazada saqlaymiz
-                    setChannelMembership(userId, true);
-                }
-            } catch (error) {
-                console.error('Kanal a\'zoligini tekshirishda xatolik:', error);
-                // API xatoligi bo'lsa ham kanal a'zoligi talab qilamiz
-                const membershipMsg = getChannelMembershipMessage();
-                const keyboard = getChannelMembershipKeyboard();
-
-                await ctx.replyWithMarkdown(membershipMsg, keyboard);
-                return;
-            }
-        }
     }
     return next();
 });
