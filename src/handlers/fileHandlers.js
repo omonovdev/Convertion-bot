@@ -154,7 +154,7 @@ async function handlePdfToText(ctx, document) {
 /**
  * PDF faylni merge uchun qabul qilish
  */
-async function handlePdfForMerge(ctx, dClose. ocument) {
+async function handlePdfForMerge(ctx, document) {
     try {
         const pdfPath = await downloadFile(ctx, document.file_id, document.file_name);
 
