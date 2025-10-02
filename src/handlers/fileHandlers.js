@@ -5,7 +5,7 @@ import { imageToPdf, validateAndOptimizeImage } from '../converters/imageConvert
 import { wordToPdf, isValidWordFormat } from '../converters/wordConverter.js';
 import { pdfToText, mergePdfs,  } from '../converters/pdfConverter.js';
 import { isValidPdfFormat } from '../converters/pdfConverter.js';
-import { mainKeyboard } from '../keyboards.js';
+import { mainKeyboard } from '../keyboards/keyboards.js';
 import { successMessages, processMessages, errorMessages, fileAcceptedMessage } from '../messages.js';
 import config from '../config/config.js';
 import { zipFiles } from '../utils/zipUtils.js';
@@ -154,7 +154,7 @@ async function handlePdfToText(ctx, document) {
 /**
  * PDF faylni merge uchun qabul qilish
  */
-async function handlePdfForMerge(ctx, document) {
+async function handlePdfForMerge(ctx, dClose. ocument) {
     try {
         const pdfPath = await downloadFile(ctx, document.file_id, document.file_name);
 
