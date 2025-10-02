@@ -6,7 +6,7 @@ import { wordToPdf, isValidWordFormat } from '../converters/wordConverter.js';
 import { pdfToText, mergePdfs, isValidPdfFormat } from '../converters/pdfConverter.js';
 import { mainKeyboard } from '../keyboards.js';
 import { successMessages, processMessages, errorMessages, fileAcceptedMessage } from '../messages.js';
-import config from '../config.js';
+import config from '../config/config.js';
 
 /**
  * Rasm fayllarini qayta ishlash
@@ -24,7 +24,7 @@ export async function handlePhoto(ctx) {
             const fileName = generateFileName('image', '.jpg');
             const imagePath = await downloadFile(ctx, photo.file_id, fileName);
 
-            const outputPath = path.join(config.TEMP_DIR, generateFileName('converted', '.pdf'));
+            const outputPath = path.join(config.tempDir, generateFileName('converted', '.pdf'));
             await imageToPdf(imagePath, outputPath);
 
             await ctx.replyWithDocument({
@@ -91,7 +91,7 @@ async function handleWordToPdf(ctx, document) {
         processingMsg = await ctx.reply(processMessages.wordProcessing);
 
         const docxPath = await downloadFile(ctx, document.file_id, document.file_name);
-        const outputPath = path.join(config.TEMP_DIR, generateFileName('converted', '.pdf'));
+    const outputPath = path.join(config.tempDir, generateFileName('converted', '.pdf'));
 
         await wordToPdf(docxPath, outputPath);
 
@@ -128,7 +128,7 @@ async function handlePdfToText(ctx, document) {
         processingMsg = await ctx.reply(processMessages.pdfProcessing);
 
         const pdfPath = await downloadFile(ctx, document.file_id, document.file_name);
-        const outputPath = path.join(config.TEMP_DIR, generateFileName('converted', '.txt'));
+    const outputPath = path.join(config.tempDir, generateFileName('converted', '.txt'));
 
         await pdfToText(pdfPath, outputPath);
 
@@ -195,7 +195,7 @@ export async function handleMergePdfs(ctx) {
     try {
         processingMsg = await ctx.reply(processMessages.merging);
 
-        const outputPath = path.join(config.TEMP_DIR, generateFileName('merged', '.pdf'));
+    const outputPath = path.join(config.tempDir, generateFileName('merged', '.pdf'));
         await mergePdfs(pdfFiles, outputPath);
 
         await ctx.replyWithDocument({

@@ -1,4 +1,4 @@
-import config from './config.js';
+import config from './config/config.js';
 
 /**
  * Xush kelibsiz xabari
@@ -9,7 +9,7 @@ export function getWelcomeMessage(firstName) {
     return `
 🤖 *Assalomu alaykum, ${firstName}!*
 
-📁 *${config.BOT_NAME}*ga xush kelibsiz!
+📁 *${config.botName}*ga xush kelibsiz!
 
 Bu bot yordamida quyidagi operatsiyalarni amalga oshirishingiz mumkin:
 
@@ -41,11 +41,11 @@ export const helpMessage = `
 • PDF + PDF = Birlashtirilgan PDF
 
 ⚠️ *Cheklovlar:*
-• Maksimal fayl hajmi: ${Math.round(config.MAX_FILE_SIZE / 1024 / 1024)}MB
+• Maksimal fayl hajmi: ${Math.round(config.maxFileSize / 1024 / 1024)}MB
 • Bir vaqtda faqat bitta fayl
 • PDF birlashtirish uchun ketma-ket yuborishingiz mumkin
 
-❓ Savollar uchun: @${config.ADMIN_USERNAME}
+❓ Savollar uchun: @${config.adminUsername}
 `;
 
 /**
@@ -85,7 +85,7 @@ export const processMessages = {
  */
 export const errorMessages = {
     invalidFormat: '❌ Noto\'g\'ri fayl formati! Iltimos, to\'g\'ri formatdagi faylni yuboring.',
-    fileTooLarge: `❌ Fayl hajmi ${Math.round(config.MAX_FILE_SIZE / 1024 / 1024)}MB dan katta bo'lmasligi kerak!`,
+    fileTooLarge: `❌ Fayl hajmi ${Math.round(config.maxFileSize / 1024 / 1024)}MB dan katta bo'lmasligi kerak!`,
     downloadError: '❌ Faylni yuklab olishda xatolik yuz berdi!',
     conversionError: '❌ Faylni konvertatsiya qilishda xatolik yuz berdi!',
     mergeError: '❌ PDF fayllarni birlashtirishda xatolik yuz berdi!',

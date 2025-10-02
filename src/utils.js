@@ -1,12 +1,12 @@
 import fs from 'fs';
 import path from 'path';
-import config from './config.js';
+import config from './config/config.js';
 
 /**
  * Kerakli papkalarni yaratish
  */
 export function createDirectories() {
-    [config.TEMP_DIR, config.DOWNLOADS_DIR].forEach(dir => {
+    [config.tempDir, config.downloadsDir].forEach(dir => {
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir, { recursive: true });
             console.log(`📁 Papka yaratildi: ${dir}`);
@@ -31,7 +31,7 @@ export async function downloadFile(ctx, fileId, fileName) {
         }
 
         const buffer = await response.arrayBuffer();
-        const filePath = path.join(config.DOWNLOADS_DIR, fileName);
+    const filePath = path.join(config.downloadsDir, fileName);
         fs.writeFileSync(filePath, Buffer.from(buffer));
 
         console.log(`📥 Fayl yuklab olindi: ${fileName}`);
@@ -69,7 +69,7 @@ export function cleanupFiles(filePaths) {
  * @returns {boolean} - Hajm mos kelsa true
  */
 export function validateFileSize(fileSize) {
-    return fileSize <= config.MAX_FILE_SIZE;
+    return fileSize <= config.maxFileSize;
 }
 
 /**

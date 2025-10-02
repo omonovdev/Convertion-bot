@@ -153,7 +153,7 @@ function validateImageFile(fileName, allowedExtensions) {
 }
 
 // Bot yaratish - to'g'ri token bilan
-const bot = new Telegraf('8352171313:AAHEzY9a4If2mT69T5ks2fIC1PgpNGg8yts', {
+const bot = new Telegraf(config.botToken, {
     telegram: {
         webhookReply: false,
         timeout: 10000, // 10 sekund timeout
