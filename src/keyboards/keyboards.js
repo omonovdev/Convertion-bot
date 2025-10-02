@@ -1,5 +1,6 @@
+export const cancelKeyboard = getCancelKeyboard('uz');
+export const mergeKeyboard = getMergeKeyboard('uz');
 import { Markup } from 'telegraf';
-// mainKeyboard: default (oddiy) menyu, admin emas, uzbek tilida
 export const mainKeyboard = getMainKeyboard(false, 'uz');
 
 /**
