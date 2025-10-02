@@ -1,45 +1,38 @@
 import path from 'path';
 import { userStates } from './commandHandlers.js';
 import { downloadFile, cleanupFiles, generateFileName, validateFileSize } from '../utils.js';
-import { imageToPdf, isValidImageFormat } from '../converters/imageConverter.js';
+import { imageToPdf, validateAndOptimizeImage } from '../converters/imageConverter.js';
 import { wordToPdf, isValidWordFormat } from '../converters/wordConverter.js';
-import { pdfToText, mergePdfs, isValidPdfFormat } from '../converters/pdfConverter.js';
+import { pdfToText, mergePdfs,  } from '../converters/pdfConverter.js';
+import { isValidPdfFormat } from '../converters/pdfConverter.js';
 import { mainKeyboard } from '../keyboards.js';
 import { successMessages, processMessages, errorMessages, fileAcceptedMessage } from '../messages.js';
 import config from '../config/config.js';
+import { zipFiles } from '../utils/zipUtils.js';
 
 /**
  * Rasm fayllarini qayta ishlash
  */
 export async function handlePhoto(ctx) {
     const userState = userStates.get(ctx.from.id);
-
     if (userState === 'waiting_jpg' || userState === 'waiting_png') {
         let processingMsg;
-
         try {
             processingMsg = await ctx.reply(processMessages.imageProcessing);
-
             const photo = ctx.message.photo[ctx.message.photo.length - 1];
             const fileName = generateFileName('image', '.jpg');
             const imagePath = await downloadFile(ctx, photo.file_id, fileName);
-
             const outputPath = path.join(config.tempDir, generateFileName('converted', '.pdf'));
             await imageToPdf(imagePath, outputPath);
-
             await ctx.replyWithDocument({
                 source: outputPath,
                 filename: generateFileName('converted_image', '.pdf')
             });
-
             await ctx.telegram.deleteMessage(ctx.chat.id, processingMsg.message_id);
             await ctx.reply(successMessages.imageConverted, mainKeyboard);
-
             cleanupFiles([imagePath, outputPath]);
             userStates.delete(ctx.from.id);
-
             console.log(`✅ ${ctx.from.first_name} rasm PDF ga aylantirdi`);
-
         } catch (error) {
             if (processingMsg) {
                 await ctx.telegram.deleteMessage(ctx.chat.id, processingMsg.message_id);
@@ -48,6 +41,23 @@ export async function handlePhoto(ctx) {
             userStates.delete(ctx.from.id);
             console.error('Rasm konvertatsiya xatoligi:', error);
         }
+    }
+}
+
+
+// Har qanday faylni ziplab yuborish
+export async function handleZip(ctx, filePath) {
+    try {
+        const zipName = generateFileName('archive', '.zip');
+        const zipPath = path.join(config.tempDir, zipName);
+        await zipFiles([filePath], zipPath);
+        await ctx.replyWithDocument({
+            source: zipPath,
+            filename: zipName
+        });
+        cleanupFiles([filePath, zipPath]);
+    } catch (err) {
+        await ctx.reply(errorMessages.zipError || 'Zip fayl yaratishda xatolik.');
     }
 }
 
@@ -90,21 +100,7 @@ async function handleWordToPdf(ctx, document) {
     try {
         processingMsg = await ctx.reply(processMessages.wordProcessing);
 
-        const docxPath = await downloadFile(ctx, document.file_id, document.file_name);
-    const outputPath = path.join(config.tempDir, generateFileName('converted', '.pdf'));
-
-        await wordToPdf(docxPath, outputPath);
-
-        await ctx.replyWithDocument({
-            source: outputPath,
-            filename: document.file_name.replace('.docx', '.pdf')
-        });
-
-        await ctx.telegram.deleteMessage(ctx.chat.id, processingMsg.message_id);
-        await ctx.reply(successMessages.wordConverted, mainKeyboard);
-
-        cleanupFiles([docxPath, outputPath]);
-        userStates.delete(ctx.from.id);
+    // Har qanday faylni ziplab yuborish
 
         console.log(`✅ ${ctx.from.first_name} Word PDF ga aylantirdi`);
 

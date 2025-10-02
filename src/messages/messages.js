@@ -1,86 +1,42 @@
 import config from '../config/config.js';
+/**
+ * Welcome xabari
+ */
+export function getWelcomeMessage(userLang = 'uz') {
+    const messages = {
+        uz: `✅ Til o'zbekcha o'zgartirildi!\n\nAssalomu alaykum, Ahrorbek!\n\nProfessional File Conversion Botga xush kelibsiz!\n\nBu bot yordamida quyidagi operatsiyalarni amalga oshirishingiz mumkin:\n\n📸 JPG → PDF\n🖼 PNG → PDF\n📝 Word → TEXT\n📄 PDF → Word\n🔗 PDF fayllarni birlashtirish\n📦 Zip qilish\n\n⚡️ Ajoyib xususiyatlar:\n• Cheklovlar yo'q! Istalgancha fayl konvert qiling\n• Bir vaqtda ko'p fayllar bilan ishlash\n• Tez va ishonchli xizmat\n\nQuyidagi tugmalardan birini tanlang:`,
+        ru: `✅ Язык изменен на русский!\n\nЗдравствуйте, Ahrorbek!\n\nДобро пожаловать в Professional File Conversion Bot!\n\nС помощью этого бота вы можете выполнять следующие операции:\n\n📸 JPG → PDF\n🖼 PNG → PDF\n📝 Word → TEXT\n📄 PDF → Word\n🔗 Объединить PDF\n📦 Архивировать\n\n⚡️ Отличные возможности:\n• Нет ограничений! Конвертируйте сколько угодно файлов\n• Обработка нескольких файлов одновременно\n• Быстро и надежно\n\nВыберите одну из кнопок ниже:`,
+        en: `✅ Language changed to English!\n\nHello, Ahrorbek!\n\nWelcome to the Professional File Conversion Bot!\n\nWith this bot you can perform the following operations:\n\n📸 JPG → PDF\n🖼 PNG → PDF\n📝 Word → TEXT\n📄 PDF → Word\n🔗 Merge PDF\n📦 Zip\n\n⚡️ Great features:\n• No limits! Convert as many files as you want\n• Process multiple files at once\n• Fast and reliable service\n\nChoose one of the buttons below:`
+    };
+    return messages[userLang] || messages.uz;
+}
 
 /**
- * Xush kelibsiz xabari
+ * Telegram ID xabari
  */
-export function getWelcomeMessage(firstName) {
-    return `
-🤖 *Assalomu alaykum, ${firstName}!*
 
-📁 *Professional File Conversion Bot*ga xush kelibsiz!
-
-Bu bot yordamida quyidagi operatsiyalarni amalga oshirishingiz mumkin:
-
-📸 *JPG → PDF* ♻️
-🖼 *PNG → PDF* ♻️  
-📝 *Word → PDF* ♻️
-📄 *PDF → Word* ♻️
-🔗 *PDF fayllarni birlashtirish* ➕
-
-⚡ *Ajoyib xususiyatlar:*
-• Cheklovlar yo'q! Istalgancha fayl konvert qiling
-• Bir vaqtda ko'p fayllar bilan ishlash
-• Custom fayl nomlari
-• Yuqori sifatli konversiya
-• Tez va ishonchli xizmat
-
-Quyidagi tugmalardan birini tanlang:
-    `;
+/**
+ * Telegram ID xabari
+ */
+export function getTelegramIdMessage(userId, userLang = 'uz') {
+    const date = new Date();
+    const formattedDate = date.toLocaleString('uz-UZ', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+    });
+    return `Sizning ma'lumotlaringiz:\n\nTelegram ID: ${userId}\nSo'rov vaqti: ${formattedDate}\n\nBu ID nimaga kerak?\n- Developer bilan aloqa: @omonovahrorbek (licka)\n- Xatoliklarni xabar qilish\n- Maxsus xususiyatlardan foydalanish\n\nMaxfiylik: Bu ma'lumot xavfsiz va faqat texnik maqsadlarda ishlatiladi.`;
 }
 
 /**
  * Yordam xabari
  */
 export function getHelpMessage() {
-    return `
-📖 *Yordam bo'limi*
-
-🔄 *Foydalanish tartibi:*
-1️⃣ Kerakli operatsiyani tanlang
-2️⃣ Fayl(lar)ni yuboring
-3️⃣ Fayl nomini kiriting (ixtiyoriy)
-4️⃣ Konversiyani boshlang
-5️⃣ Tayyor faylni yuklab oling
-
-📊 *Qo'llab-quvvatlanadigan formatlar:*
-• JPG, JPEG, PNG → PDF
-• DOCX → PDF  
-• PDF → TXT (text)
-• Bir nechta PDF → Birlashtirilgan PDF
-
-⚡ *Cheklovlar yo'q:*
-• Maksimal fayl hajmi: ${(config.maxFileSize / 1024 / 1024).toFixed(1)}MB
-• Istalgancha fayl birlashtiring
-• Istalgancha rasm/hujjat konvert qiling
-• Tez va sifatli natija
-
-💡 *Maslahatlar:*
-• Sifatli natija uchun yuqori sifatli fayllar yuboring
-• Fayl nomlarida maxsus belgilar ishlatmang
-• Internet aloqasi barqaror bo'lishi kerak
-
-❓ Savollar uchun: [@${config.adminUsername}](https://t.me/${config.adminUsername})
-    `;
+    return `📖 Yordam bo'limi\n\nFoydalanish tartibi:\n1️⃣ Kerakli operatsiyani tanlang\n2️⃣ Fayl(lar)ni yuboring\n3️⃣ Fayl nomini kiriting (ixtiyoriy)\n5️⃣ Tayyor faylni yuklab oling\n\n• Internet aloqasi barqaror bo'lishi kerak\n\nSavollar uchun: @${config.adminUsername}`;
 }
 
 /**
  * Telegram ID xabari
  */
-export function getTelegramIdMessage(userId) {
-    return `
-🆔 *Sizning ma'lumotlaringiz:*
-
-👤 *Telegram ID:* \`${userId}\`
-📅 *So'rov vaqti:* ${new Date().toLocaleString('uz-UZ')}
-
-📋 *Bu ID nimaga kerak?*
-• Developer bilan aloqa
-• Xatoliklarni xabar qilish
-• Maxsus xususiyatlardan foydalanish
-
-🔒 *Maxfiylik:* Bu ma'lumot xavfsiz va faqat texnik maqsadlarda ishlatiladi.
-    `;
-}
 
 /**
  * Konversiya boshlanish xabarlari
@@ -91,7 +47,6 @@ export const conversionMessages = {
     waitingDocx: '📝 Word (.docx) fayllarini yuboring. Tayyor bo\'lganda "✅ O\'tkazishni boshlash" tugmasini bosing. (TEXT formatiga o\'tkaziladi)',
     waitingPdfToWord: '📄 PDF fayllarini yuboring. Tayyor bo\'lganda "✅ O\'tkazishni boshlash" tugmasini bosing.',
     waitingPdfsToMerge: '🔗 Birlashtirishni xohlagan PDF fayllaringizni ketma-ket yuboring.',
-
     enterFileName: 'Yangi fayl uchun nom kiriting (kengaytmasiz):\n\n💡 *Misol:* Mening_hujjatim\n📝 Agar nom bermasangiz, avtomatik nom qo\'yiladi.',
 
     processing: '⏳ Fayllar qayta ishlanmoqda...',
@@ -104,7 +59,7 @@ export const conversionMessages = {
 
     cancelled: '❌ Operatsiya bekor qilindi.',
 
-    fileReceived: (fileName, count) => `📄 Fayl qabul qilindi: *${fileName}*\n📊 Jami fayllar: ${count} ta`,
+    fileReceived: (fileName, count) => `📄 Fayl qabul qilindi: *${fileName}*\n📊 Jami ${count} ta`,
 
     minFilesRequired: (min) => `❌ Kamida ${min} ta fayl yuboring!`,
 
@@ -114,6 +69,9 @@ export const conversionMessages = {
 };
 
 /**
+    };
+    return messages[userLang] || messages.uz;
+}
  * Share bot xabari
  */
 export function getShareBotMessage() {

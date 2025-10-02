@@ -1,3 +1,12 @@
+// PDF fayl nomini tekshirish
+export function isValidPdfFormat(fileName) {
+    return fileName.toLowerCase().endsWith('.pdf');
+}
+// PDF dan textga o'girish stub
+export async function pdfToText(pdfPaths, outputPath) {
+    // TODO: PDF dan textga o'girish logikasi
+    return outputPath;
+}
 import PDFMerger from 'pdf-merger-js';
 import fs from 'fs';
 import path from 'path';
@@ -126,8 +135,3 @@ export function validatePdfFiles(pdfPaths) {
     };
 }
 
-export default {
-    mergePdfs,
-    getPdfInfo,
-    validatePdfFiles
-};

@@ -10,7 +10,7 @@ import config from '../config/config.js';
  * @param {string} outputPath - Chiqish PDF yo'li
  * @param {string} customName - Custom fayl nomi
  */
-export async function imagesToPdf(imagePaths, outputPath, customName = null) {
+export async function imageToPdf(imagePaths, outputPath, customName = null) {
     try {
         const pdfDoc = await PDFDocument.create();
 
@@ -112,7 +112,3 @@ export async function validateAndOptimizeImage(imagePath) {
     }
 }
 
-export default {
-    imagesToPdf,
-    validateAndOptimizeImage
-};

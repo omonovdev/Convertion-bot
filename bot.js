@@ -1,3 +1,4 @@
+// ...existing code...
 import { Telegraf, Markup } from 'telegraf';
 import { message } from 'telegraf/filters';
 import dotenv from 'dotenv';
@@ -55,8 +56,9 @@ import {
 } from './src/utils/userManager.js';
 
 // Converters
-import { imagesToPdf } from './src/converters/imageConverter.js';
+import { imageToPdf } from './src/converters/imageConverter.js';
 import { mergePdfs } from './src/converters/pdfConverter.js';
+import { handleZip } from './src/handlers/fileHandlers.js';
 
 // Word converter funksiyalari alohida import
 async function wordToPdf(docxPaths, outputPath, customName = null) {
@@ -159,6 +161,13 @@ const bot = new Telegraf(config.botToken, {
         timeout: 10000, // 10 sekund timeout
         retryAfter: 1000 // 1 sekund kutish
     }
+});
+
+// Zip qilish - barcha tillar uchun
+bot.hears(['📦 Zip qilish', '📦 Zip', '📦 Архивировать'], async (ctx) => {
+    const userId = ctx.from.id;
+    userStates.set(userId, 'waiting_zip');
+    await ctx.reply('Zip qilish uchun fayl yuboring.', getCancelKeyboard());
 });
 
 // Foydalanuvchi holatlari
@@ -378,7 +387,15 @@ bot.hears('📸 JPG → PDF', async (ctx) => {
 
 // PNG to PDF
 // PNG to PDF - barcha tillar uchun
-bot.hears('🖼 PNG → PDF', async (ctx) => {
+// Zip qilish - barcha tillar uchun
+bot.hears(['� Zip qilish', '📦 Zip', '📦 Архивировать'], async (ctx) => {
+    const userId = ctx.from.id;
+    const userLang = getUserLanguage(userId);
+    userStates.set(userId, 'waiting_zip');
+    userFiles.set(userId, []);
+    await ctx.reply('Zip qilish uchun fayl yuboring.', getCancelKeyboard(userLang));
+});
+bot.hears('�🖼 PNG → PDF', async (ctx) => {
     try {
         const userId = ctx.from.id;
         const userLang = getUserLanguage(userId);
@@ -476,7 +493,7 @@ bot.hears(/^✅ (O'tkazishni boshlash|Начать конвертацию|Start 
 
         if (userState === config.userStates.WAITING_JPG || userState === config.userStates.WAITING_PNG) {
             outputPath = `temp/converted_images_${Date.now()}.pdf`;
-            result = await imagesToPdf(files, outputPath);
+            result = await imageToPdf(files, outputPath);
 
             await ctx.replyWithDocument({
                 source: result,
@@ -648,13 +665,18 @@ bot.on(message('document'), async (ctx) => {
     const userId = ctx.from.id;
     const userState = userStates.get(userId);
     const document = ctx.message.document;
-
     if (!document) return;
 
     try {
+        if (userState === 'waiting_zip') {
+            const filePath = await downloadFile(ctx, document.file_id, document.file_name);
+            await handleZip(ctx, filePath);
+            userStates.delete(userId);
+            return;
+        }
+
         let isValidFile = false;
         let expectedFormat = '';
-
         if (userState === config.userStates.WAITING_JPG && validateImageFile(document.file_name, ['jpg', 'jpeg'])) {
             isValidFile = true;
             expectedFormat = 'JPG/JPEG';
@@ -674,11 +696,9 @@ bot.on(message('document'), async (ctx) => {
 
         if (isValidFile) {
             const filePath = await downloadFile(ctx, document.file_id, document.file_name);
-
             const files = userFiles.get(userId) || [];
             files.push(filePath);
             userFiles.set(userId, files);
-
             const userLang = getUserLanguage(userId);
             if (userState === config.userStates.WAITING_PDFS_TO_MERGE) {
                 await ctx.reply(getMessage('fileReceived', userLang, document.file_name, files.length), getMergeKeyboard(userLang));
@@ -687,8 +707,6 @@ bot.on(message('document'), async (ctx) => {
             }
         } else {
             const userLang = getUserLanguage(userId);
-
-            // Foydalanuvchi holatiga qarab to'g'ri format nomini ko'rsatish
             if (userState === config.userStates.WAITING_JPG) {
                 expectedFormat = 'JPG/JPEG';
             } else if (userState === config.userStates.WAITING_PNG) {
@@ -698,10 +716,8 @@ bot.on(message('document'), async (ctx) => {
             } else if (userState === config.userStates.WAITING_PDF_TO_WORD || userState === config.userStates.WAITING_PDFS_TO_MERGE) {
                 expectedFormat = 'PDF';
             }
-
             await ctx.reply(getMessage('invalidFormat', userLang, expectedFormat));
         }
-
     } catch (error) {
         console.error('Document handler error:', error);
         const userLang = getUserLanguage(userId);
