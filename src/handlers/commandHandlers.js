@@ -1,4 +1,4 @@
-import { mainKeyboard, cancelKeyboard, mergeKeyboard } from '../keyboards.js';
+import { mainKeyboard, cancelKeyboard, mergeKeyboard } from '../keyboards/keyboards.js';
 import { getWelcomeMessage, helpMessage, userIdMessage, waitingMessages } from '../messages.js';
 
 // Foydalanuvchi holatlari
