@@ -11,6 +11,7 @@ dotenv.config({ path: path.join(__dirname, '../../.env') });
 
 export const config = {
     botToken: process.env.BOT_TOKEN,
+    pgUrl: process.env.PG_URL,
     maxFileSize: parseInt(process.env.MAX_FILE_SIZE) || 104857600, // 100MB (oshirildi)
     tempDir: process.env.TEMP_DIR || 'temp',
     downloadsDir: process.env.DOWNLOADS_DIR || 'downloads',
